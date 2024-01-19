@@ -20,11 +20,13 @@ app.use(session({
 }));
 
 app.get('/login',loginValidations.isSesionInactive, (req, res) => {
-    const sessionKey = req.sessionID;
-    console.log(sessionKey);
     res.sendFile(__dirname + '/index.html');
 });
-
+app.post('/login',loginValidations.isSesionInactive, (req, res) => {
+    const sessionKey = req.sessionID;
+    console.log(sessionKey);
+    res.redirect('/login');
+});
 
 app.post('/validate',tokenValidations.tokenExiste,loginValidations.validarUsuario,loginValidations.isSesionInactive,loginValidations.saveTokenToDb,(req, res) => {
     
@@ -54,7 +56,7 @@ app.post('/desloguear', (req, res) => {
     (error,results) => {
         if (results.affectedRows>0){
             console.log('deslogueado satisfactoriamente');
-            res.status(200).send(`Usuario ${usuario}  deslogueado correctamente.`); 
+            res.status(200).redirect('/login'); 
         }
         else{
             res.status(200).send('Failed to unlog');
@@ -69,12 +71,7 @@ app.get('/chat', (req,res)=>{
     res.sendFile(main+'/public/chatFront.html');
 });
 
-app.post('/homepage', (req, res) => {
-  });
 
-app.get('/home', (req,res)=>{
-    res.sendFile(__dirname + '/home.html');
-})
 
   /*
 app.get('/login',(req,res)=>{

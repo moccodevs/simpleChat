@@ -37,13 +37,7 @@
           body: JSON.stringify(datosMensaje)
       };
 
-      const solicitudGet = {
-          method: 'GET',
-          headers: {
-          'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(datosMensaje)
-      };
+      
 
       fetch('http://192.168.1.47:3000/validate',solicitudConfig)
         .then(response => {
@@ -52,14 +46,7 @@
           }
             return response.json();
         })
-        .then(data => {
-          fetch('http://192.168.1.47:3000/chat',solicitudConfig).then(
-            response=>{}
-          )
-
-        // Hacer algo con la respuesta si es necesario
-          console.log('Respuesta de la API:', data);
-        })
+        
         .catch(error => {
           console.error('Error en la solicitud:', error);
         });

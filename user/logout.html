@@ -8,8 +8,28 @@
 </head>
 <body>
   <h2>Logout</h2>
-  <form action="/desloguear" method="POST">
+  <form method="POST">
     <button type="submit">desloguear</button>
   </form>
+
+  <script>
+
+      const solicitudGet = {
+          method: 'POST',
+          headers: {
+          'Content-Type': 'application/json'
+          }
+      };
+      fetch('http://192.168.1.47:3000/desloguear',solicitudConfig)
+        .then(response => {
+        if (!response.ok) { 
+            throw new Error(`Error de red: ${response.status}`);
+          }
+            return response.json();
+        })
+        .catch(error => {
+          console.error('Error en la solicitud:', error);
+        });
+  </script>
 </body>
 </html>

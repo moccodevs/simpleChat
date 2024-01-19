@@ -15,7 +15,29 @@ const tokenExiste = (req,res,next)=>{
         }
     });
 }
+const validarTokenSocket = (token,next) =>{
+   
+    console.log('validando token');
+    connection.query(`SELECT username FROM users WHERE token= '${token}'`,
+    (error,results) => {
+        if (error){
+            console.log('error al validar token');
+            return false;
+        }
+        else{
+            if (Object.keys(results).length>0){
+                console.log(`Credenciales OK para chat `);
+                next();
+            }
+            else{
+                console.log('token invalido para chat');
+                return false;
+            }
+        }
 
+    });
+
+}
 const validarToken=(req,res,next)=>{
     let sessionKey='';
     try{
@@ -49,5 +71,6 @@ const validarToken=(req,res,next)=>{
 
 module.exports= {
     tokenExiste,
-    validarToken
+    validarToken,
+    validarTokenSocket
 };

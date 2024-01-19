@@ -78,15 +78,21 @@ io.use((socket, next) => {
     
 });
 */
-    
 
-io.on('connection', (socket) => {
+io.use((socket,next)=>{
     let sessionCookie = socket.handshake.headers.cookie;
     sessionCookie = decodeURIComponent(sessionCookie);
     const startIndex = sessionCookie.indexOf(":") + 1;
     const endIndex = sessionCookie.indexOf(".", startIndex);
     const sessionId = sessionCookie.slice(startIndex, endIndex);
+    tokenValidations.validarTokenSocket(sessionId,next);
+    socket.token=sessionId;
+        
+    }    
+);
 
+io.on('connection', (socket) => {
+    const sessionId = socket.token;
     console.log('Nuevo usuario conectado socket:'+sessionId);
     socket.emit(`getIdentity`,sessionId);
     socket.join(sessionId);
