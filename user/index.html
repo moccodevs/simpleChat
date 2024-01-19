@@ -1,0 +1,70 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar sesión</title>
+</head>
+<body>
+  <h2>Iniciar sesión</h2>
+  <form method="POST">
+    <label for="usuario">Usuario:</label>
+    <input type="text" id="usuario" name="usuario" required>
+    <br>
+    <label for="contrasena">Contraseña:</label>
+    <input type="password" id="contrasena" name="contrasena" required>
+    <br>
+    <button id="send-button" type="submit">Iniciar sesión</button>
+  </form>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script>
+    const enviarData=document.getElementById('enviarData');
+    
+    // Configurar la solicitud
+    
+    
+    document.getElementById('send-button').addEventListener('click', function() {
+      const datosMensaje = {
+          'usuario': $('#usuario').val(),
+          'contrasena': $('#contrasena').val()
+      };
+      const solicitudConfig = {
+          method: 'POST',
+          headers: {
+          'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(datosMensaje)
+      };
+
+      const solicitudGet = {
+          method: 'GET',
+          headers: {
+          'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(datosMensaje)
+      };
+
+      fetch('http://192.168.1.47:3000/validate',solicitudConfig)
+        .then(response => {
+        if (!response.ok) { 
+            throw new Error(`Error de red: ${response.status}`);
+          }
+            return response.json();
+        })
+        .then(data => {
+          fetch('http://192.168.1.47:3000/chat',solicitudConfig).then(
+            response=>{}
+          )
+
+        // Hacer algo con la respuesta si es necesario
+          console.log('Respuesta de la API:', data);
+        })
+        .catch(error => {
+          console.error('Error en la solicitud:', error);
+        });
+    });
+  </script>
+</body>
+
+</html>
