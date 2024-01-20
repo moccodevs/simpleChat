@@ -37,6 +37,27 @@ const isSesionInactive=(req,res,next)=>{
     });
 }
 
+
+const unlogUser = (token,callback) => {
+    return new Promise((resolve, reject) => {
+        console.log('Deslogueando a ' + token + '...');
+        connection.query(`UPDATE users SET token='no token', logged=0 WHERE token='${token}' AND logged=1`,
+            (error, results) => {
+                if (error) {
+                    reject(error);
+                    return;
+                }
+
+                if (results.affectedRows > 0) {
+                    resolve('Deslogueado satisfactoriamente');
+                } else {
+                    resolve(callback);
+                }
+            }
+        );
+    });
+}
+
 const saveTokenToDb=(req,res,next)=>{
     const sessionKey = req.sessionID;
     const { usuario, contrasena } = req.body;
@@ -60,5 +81,6 @@ const saveTokenToDb=(req,res,next)=>{
 module.exports = {
     isSesionInactive,
     saveTokenToDb,
-    validarUsuario
+    validarUsuario,
+    unlogUser
 };

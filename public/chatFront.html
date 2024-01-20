@@ -2,32 +2,39 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Chat</title>
     <style>
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background-color: #797979;
         }
 
         #chat-container {
-            max-width: 600px;
-            margin: 50px auto;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
+            width: 600px;
+            max-width: 95%;
+            max-height: 100%;
+            margin: 10px auto;
+            background-color: #ffffff93;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.404);
+            border-radius: 20px;
             overflow: hidden;
+            
+            
         }
 
         #messages-container {
-            height: 300px;
+            height: 326px;
             overflow-y: scroll;
             padding: 10px;
         }
 
         #input-container {
+
+
             display: flex;
             padding: 10px;
         }
@@ -36,13 +43,50 @@
             flex: 1;
             padding: 5px;
             border: 1px solid #ccc;
-            border-radius: 3px;
+            border-radius: 5px;
         }
         #destination-input {
             flex: 1;
             padding: 5px;
             border: 1px solid #ccc;
             border-radius: 3px;
+        }
+
+        .message-income-container{
+           
+            text-align: -webkit-left;
+            margin-top: 5px;
+            padding-right: 30%;
+        }
+        .message-outcome-container{
+            text-align: -webkit-right;
+            margin-top: 5px;
+            padding-left: 30%;
+        }
+        .message-send{
+            
+            overflow-wrap: break-word;
+            align-items: right;
+            box-shadow: 2px 4px 3px rgba(0, 0, 0, 0.342);
+            max-width: fit-content;
+            
+            padding: 10px ;
+            color: #f4f4f4;
+            
+            background: #00677967;
+            
+            border-radius: 15px;
+        }
+
+        .message-income{
+            overflow-wrap: break-word;
+            align-items: left;
+            box-shadow: 2px 4px 3px rgba(0, 0, 0, 0.342);
+            max-width: fit-content;
+            padding: 10px ;
+            color: #f4f4f4;
+            background: #00677967;
+            border-radius: 15px;
         }
 
         #send-button {
@@ -58,7 +102,7 @@
 </head>
 <body>
     <div id="chat-container">
-        <input type="text" id="destination-input" placeholder="Destination token">
+        <input type="text" id="destination-input" placeholder="Usuario receptor" autofocus="false">
         <div id="messages-container"></div>
         <div id="input-container">
             
@@ -80,9 +124,9 @@
             $('#message-input').val('');
             sessionID = message;
 
-            socket.on('receiveMessage',(message)=>{
-            $('#messages-container').append('<div class="message">Contraparte: ' + message + '</div>');
-            $('#message-input').val('');
+            socket.on('receiveMessage',(message,emisor)=>{
+            $('#messages-container').append(`<div class="message-income-container"><div class="message-income">${emisor}: ` + message + '</div></div>');
+            
             })
 
             
@@ -95,7 +139,7 @@
             function sendMessage() {
                 var message = $('#message-input').val();
                 if (message.trim() !== '') {
-                    $('#messages-container').append('<div class="message">Tú: ' + message + '</div>');
+                    $('#messages-container').append('<div class="message-outcome-container"><div class="message-send">Tú: ' + message + '</div></div>');
                     $('#message-input').val('');
                     const destination = $('#destination-input').val();
                     const data = {

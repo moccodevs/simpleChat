@@ -49,20 +49,17 @@ app.get('/desloguear', (req, res) => {
 
 app.post('/desloguear', (req, res) => {
     const sessionKey = req.sessionID;
-
     const { usuario, contrasena } = req.body;
-    console.log('deslogueando a '+ usuario+'...');
-    connection.query(`UPDATE users SET token='no token', logged=0 WHERE token='${sessionKey}' AND logged=1`,
-    (error,results) => {
-        if (results.affectedRows>0){
-            console.log('deslogueado satisfactoriamente');
-            res.status(200).redirect('/login'); 
-        }
-        else{
-            res.status(200).send('Failed to unlog');
-        }
-              
+    loginValidations.unlogUser(sessionKey,()=>{res.status(200).send('Failed to unlog')})
+    .then((result) => {
+        console.log(result);
+        
+        res.status(200).redirect('/login');
+    })
+    .catch((error) => {
+        console.error(error); // Maneja el error aquí
     });
+
 });
 
 app.get('/chat', (req,res)=>{

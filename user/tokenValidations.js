@@ -38,6 +38,60 @@ const validarTokenSocket = (token,next) =>{
     });
 
 }
+
+const getNombreByToken = (sessionKey) => {
+    return new Promise((resolve, reject) => {
+        connection.query(`SELECT username FROM users WHERE token= '${sessionKey}'`, (error, results) => {
+            if (error) {
+                console.error('Error en la consulta SQL:', error);
+                reject('Error interno del servidor');
+            }
+            if (results.length > 0) {
+                const user = results[0].username;
+                console.log('Token existe');
+                resolve(user);
+            }
+        });
+    });
+};
+
+const getTokenByUsername = (user) => {
+    return new Promise((resolve, reject) => {
+        connection.query(`SELECT token FROM users WHERE username= '${user}'`, (error, results) => {
+            if (error) {
+                console.error('Error en la consulta SQL:', error);
+                reject('Error interno del servidor');
+            }
+            if (results.length > 0) {
+                const token = results[0].token;
+                console.log('Usuario existe');
+                resolve(token);
+            }
+        });
+    });
+};
+
+/*
+const getNombreByToken = (token) =>{
+    connection.query(`SELECT username FROM users WHERE token= '${token}'`,
+    (error,results) => {
+        if (error){
+            console.log(error);
+            return;
+        }
+        else{
+            if (Object.keys(results).length>0){
+                console.log(results);
+                const user = results[0].username;
+                return user;
+            }
+            else{
+                return 'Anonimo';
+            }
+        }
+    });
+}
+*/
 const validarToken=(req,res,next)=>{
     let sessionKey='';
     try{
@@ -72,5 +126,7 @@ const validarToken=(req,res,next)=>{
 module.exports= {
     tokenExiste,
     validarToken,
-    validarTokenSocket
+    validarTokenSocket,
+    getNombreByToken,
+    getTokenByUsername
 };

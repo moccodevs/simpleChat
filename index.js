@@ -101,12 +101,45 @@ io.on('connection', (socket) => {
         console.log(msg);
         const {userToken,destination,message}=msg;
         
-        console.log(destination);
-        console.log(message);
-        //socket.emit(destination,message);
-        io.to(destination).emit('receiveMessage', message);
+        let destinationToken;
+        let emisor;
+
+        tokenValidations.getTokenByUsername(destination)
+        .then((token) => {
+            destinationToken=token;
+            // En este bloque .then(), puedes acceder al nombre de usuario resuelto
+            console.log('Token usuario receptor:', destinationToken);
+            // Puedes continuar con la lógica usando el nombre de usuario
+        })
+        .catch((error) => {
+                console.log('Error:', error);
+            
+        })
+
+        tokenValidations.getNombreByToken(userToken)
+            .then((nombreUsuario) => {
+                emisor=nombreUsuario;
+                // En este bloque .then(), puedes acceder al nombre de usuario resuelto
+                console.log('Nombre de usuario obtenido:', nombreUsuario);
+                // Puedes continuar con la lógica usando el nombre de usuario
+            })
+            .catch((error) => {
+                    console.log('Error:', error);
+                
+            }).finally((nombreUsuario)=>{
+                console.log('envando a:'+emisor);
+                
+                console.log(message);
+                //socket.emit(destination,message);
+                io.to(destinationToken).emit('receiveMessage', message,emisor);
+            });
+
+
     })
+    socket.on('disconnect', () => {
+        console.log('Usuario desconectado');
         
+    });
     
     // Manejar mensajes enviados por el cliente
     /*
@@ -117,8 +150,6 @@ io.on('connection', (socket) => {
         io.emit('receiveMessage', { user: 'OtroUsuario', message: message });
     });
     // Manejar desconexiones de usuarios
-    socket.on('disconnect', () => {
-        console.log('Usuario desconectado');
-    });
+
     */
 });

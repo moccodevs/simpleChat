@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Chat</title>
     <style>
+        html{
+            height:1200px;
+            padding-bottom: 10%;
+        }
         body {
+            
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -48,6 +54,7 @@
             border-radius: 3px;
             cursor: pointer;
         }
+
     </style>
     <!-- Añade esta línea al head para cargar el script de Socket.io -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script>
@@ -56,7 +63,7 @@
     <div id="chat-container">
         <div id="messages-container"></div>
         <div id="input-container">
-            <input type="text" id="message-input" placeholder="Escribe tu mensaje...">
+            <input type="text" id="message-input" placeholder="Escribe tu mensaje..." >
             <button id="send-button">Enviar</button>
         </div>
     </div>
