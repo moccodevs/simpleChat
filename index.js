@@ -9,6 +9,9 @@ const http = require('http');
 const socketIO = require('socket.io');
 const loginValidations= require('./user/loginValidations');
 const tokenValidations= require('./user/tokenValidations');
+const dbOperations= require('./user/dbOperations');
+
+app.use(express.static('public'));
 
 const session = require('express-session');
 app.use(session({
@@ -94,16 +97,32 @@ io.use((socket,next)=>{
 io.on('connection', (socket) => {
     const sessionId = socket.token;
     console.log('Nuevo usuario conectado socket:'+sessionId);
-    socket.emit(`getIdentity`,sessionId);
-    socket.join(sessionId);
+    
+
+    let emisorUser;
+    //busca en la base de datos el nombre de usuario emisor mediante su token
+    tokenValidations.getNombreByToken(sessionId)
+    .then((nombreUsuario) => {
+        emisorUser=nombreUsuario;
+        console.log('Usuario conectado:'+emisorUser);
+        socket.emit(`getIdentity`,emisorUser);
+        socket.join(emisorUser);
+        // En este bloque .then(), puedes acceder al nombre de usuario resuelto
+    })
+    .catch((error) => {
+            console.log('Error:', error);
+        
+    });
+
     socket.on('toServer', (msg)=>{
         console.log('mensaje recibido:');
+        msg.emisor=emisorUser;
+        const {emisor,destination,message,fecha}=msg;
         console.log(msg);
-        const {userToken,destination,message}=msg;
-        
+        msg.emisor=emisorUser;
         let destinationToken;
-        let emisor;
-
+        
+        //busca en la base de datos el token del usuario receptor dado su nombre de usuario
         tokenValidations.getTokenByUsername(destination)
         .then((token) => {
             destinationToken=token;
@@ -115,41 +134,63 @@ io.on('connection', (socket) => {
                 console.log('Error:', error);
             
         })
-
-        tokenValidations.getNombreByToken(userToken)
-            .then((nombreUsuario) => {
-                emisor=nombreUsuario;
-                // En este bloque .then(), puedes acceder al nombre de usuario resuelto
-                console.log('Nombre de usuario obtenido:', nombreUsuario);
-                // Puedes continuar con la lógica usando el nombre de usuario
+        .then(()=>{
+            console.log(message);
+            //Una vez recopilados los datos necesarios, reenvía la información al usuario destino
+            io.to(destination).emit('receiveMessage', {message:`${message}`,emisor:`${emisor}`});
+            dbOperations.saveMsgToDb(msg)
+            .then((msg)=>{
+                console.log('Mensaje guardado')
             })
-            .catch((error) => {
-                    console.log('Error:', error);
-                
-            }).finally((nombreUsuario)=>{
-                console.log('envando a:'+emisor);
-                
-                console.log(message);
-                //socket.emit(destination,message);
-                io.to(destinationToken).emit('receiveMessage', message,emisor);
-            });
-
+            .catch((error)=>{
+                console.log(error);
+            }
+            )
+        })
+        
+        
 
     })
     socket.on('disconnect', () => {
         console.log('Usuario desconectado');
         
     });
-    
-    // Manejar mensajes enviados por el cliente
-    /*
-    socket.on('sendMessage', (message) => {
-        console.log('Mensaje recibido:', message);
+    socket.on('getMessages',(callback)=>{
+        let messages;
+        console.log('Mensaje recibido: /getMessages');
+        dbOperations.getMessages(emisorUser)
+        .then((results)=>{
+            messages=results;
+            console.log(messages);
+            console.log('Devolviendo mensajes de ' + emisorUser +':');
+            callback(messages);
+            //io.emit('obtenerAmigos', amigos);
+        })
+        .catch((error)=>{
+            console.log(error);
+        });
         
         // Reenviar el mensaje a todos los clientes conectados
-        io.emit('receiveMessage', { user: 'OtroUsuario', message: message });
-    });
-    // Manejar desconexiones de usuarios
+    })
 
-    */
+    socket.on('verAmigos', (callback) => {
+        let amigos;
+        console.log('Mensaje recibido:', callback);
+        dbOperations.getAmigos(emisorUser)
+        .then((results)=>{
+            amigos=results;
+            console.log(results);
+        })
+        .catch((error)=>{
+            console.log(error);
+        }).then((results)=>{
+            console.log('Amigos de ' + emisorUser +':');
+            console.log(amigos);
+            callback(amigos);
+            //io.emit('obtenerAmigos', amigos);
+        })
+        // Reenviar el mensaje a todos los clientes conectados
+        
+    });
+
 });

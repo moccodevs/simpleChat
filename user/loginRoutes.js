@@ -68,7 +68,11 @@ app.get('/chat', (req,res)=>{
     res.sendFile(main+'/public/chatFront.html');
 });
 
-
+app.get('/testAmigos', (req,res)=>{
+    console.log('alguien llegó al chat');
+    const main = path.join(__dirname, '..');
+    res.sendFile(main+'/public/chat.html');
+});
 
   /*
 app.get('/login',(req,res)=>{
