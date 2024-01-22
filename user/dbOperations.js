@@ -50,13 +50,22 @@ const getMessages = (username) => {
                 }
 
                 if (results.length > 0) {
-                    
+                    for (const rowDataPacket of results) {
+                        // Formatear la fecha antes de imprimir
+                        //rowDataPacket.fecha = formatearFecha(rowDataPacket.fecha);
+                        console.log(results);
+                      }
                     resolve(results);
                 }
             }
         );
     });
 }
+
+function formatearFecha(fecha) {
+    const opcionesDeFormato = { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' };
+    return new Intl.DateTimeFormat('es-ES', opcionesDeFormato).format(fecha);
+  }
 
 module.exports = {
         getAmigos,

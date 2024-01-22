@@ -22,20 +22,24 @@ const socket = io('http://192.168.1.47:3000');
                 const destination = currentObject.destino;
                 const message = currentObject.mensaje;
                 const fecha = currentObject.fecha;
-              
-                // Hacer algo con los valores, por ejemplo, imprimirlos
+                
+                
                 console.log(`Emisor: ${emisor}, Destino: ${destination}, Mensaje: ${message}, Fecha: ${fecha}`);
-                if (emisor!==myUsername){
-                    socket.emit('receiveMessage',({message,emisor}));
+                if (emisor!=myUsername){
+                    socket.emit('receiveMessage',{message:`${message}`,emisor:`${emisor}`});
+                    colocarMensajeRecibido(emisor,message,fecha);
                 }
                 else{
-                    $('#messages-container').append('<div class="message-outcome-container"><div class="message-send">Tú: ' + message + '</div></div>');
-                    $('#message-input').val('');
+                    colocarMensajeEnviado(message,fecha);
                     scrollDown();
 
                 }
 
               }
+        }
+
+        const formatFecha=(fecha)=>{
+            return fecha;
         }
 
         socket.on('getIdentity',(message)=>{
@@ -53,21 +57,31 @@ const socket = io('http://192.168.1.47:3000');
                 })
 
             
-
-            
-            
-                
-
-            socket.on('receiveMessage',({message,emisor})=>{
-            $('#messages-container').append(`<div class="message-income-container"><div class="message-income">${emisor}: ` + message + '</div></div>');
-            scrollDown();
+            socket.on('receiveMessage',({message,emisor,fecha})=>{
+                //fecha = formatFecha(fecha);
+                colocarMensajeRecibido(emisor,message,fecha);
             })
 
             
             
         })
         
-
+        
+        const colocarMensajeEnviado = (mensaje,fecha)=>{
+            const fechaObject=new Date(`${fecha}`);
+            var minutosConDosDigitos = fechaObject.getMinutes() < 10 ? '0' + fechaObject.getMinutes() : fechaObject.getMinutes();
+            const fechaContainer = '<div class="fecha-message">'+ fechaObject.getHours()+':'+ minutosConDosDigitos +'</div>';
+            $('#messages-container').append('<div class="message-outcome-container"><div class="message-send">Tú: ' + mensaje +fechaContainer+ '</div></div>');
+            $('#message-input').val('');
+            scrollDown();
+        }
+        const colocarMensajeRecibido = (emisor,mensaje,fecha)=>{
+            const fechaObject=new Date(`${fecha}`);
+            var minutosConDosDigitos = fechaObject.getMinutes() < 10 ? '0' + fechaObject.getMinutes() : fechaObject.getMinutes();
+            const fechaContainer = '<div class="fecha-message">'+ fechaObject.getHours()+':'+ minutosConDosDigitos +'</div>';
+            $('#messages-container').append(`<div class="message-income-container"><div class="message-income">${emisor}: ` + mensaje + fechaContainer + '</div></div>');
+            scrollDown();
+        }
         $(document).ready(function() {
             // Función para enviar mensajes
             function sendMessage() {
@@ -76,18 +90,18 @@ const socket = io('http://192.168.1.47:3000');
 
                 var message = $('#message-input').val();
                 if (message.trim() !== '') {
-                    $('#messages-container').append('<div class="message-outcome-container"><div class="message-send">Tú: ' + message + '</div></div>');
-                    $('#message-input').val('');
-                    scrollDown();
+                    
                     const destination = $('#destination-input').val();
                     const fechaActual = new Date();
-                    const fechaNowFormateada = fechaActual.toISOString().slice(0, 19).replace('T', ' ');
+                    
+                    //const fechaNowFormateada = fechaActual.toISOString().slice(0, 19).replace('T', ' ');
                     const data = {
                         emisor:sessionID,
                         destination:destination,
                         message:message,
-                        fecha: fechaNowFormateada
+                        fecha: fechaActual
                     }
+                    colocarMensajeEnviado(message,data.fecha);
                     socket.emit('toServer', data);
 
                     // Puedes enviar el mensaje al backend aquí si es necesario

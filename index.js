@@ -137,7 +137,8 @@ io.on('connection', (socket) => {
         .then(()=>{
             console.log(message);
             //Una vez recopilados los datos necesarios, reenvía la información al usuario destino
-            io.to(destination).emit('receiveMessage', {message:`${message}`,emisor:`${emisor}`});
+            
+            io.to(destination).emit('receiveMessage', {message:`${message}`,emisor:`${emisor}`,fecha:`${fecha}`});
             dbOperations.saveMsgToDb(msg)
             .then((msg)=>{
                 console.log('Mensaje guardado')
@@ -163,6 +164,7 @@ io.on('connection', (socket) => {
             messages=results;
             console.log(messages);
             console.log('Devolviendo mensajes de ' + emisorUser +':');
+
             callback(messages);
             //io.emit('obtenerAmigos', amigos);
         })
@@ -180,17 +182,13 @@ io.on('connection', (socket) => {
         .then((results)=>{
             amigos=results;
             console.log(results);
-        })
-        .catch((error)=>{
-            console.log(error);
-        }).then((results)=>{
             console.log('Amigos de ' + emisorUser +':');
             console.log(amigos);
             callback(amigos);
             //io.emit('obtenerAmigos', amigos);
         })
-        // Reenviar el mensaje a todos los clientes conectados
-        
-    });
-
+        .catch((error)=>{
+            console.log(error);
+            })
+    })
 });
