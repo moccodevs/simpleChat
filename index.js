@@ -157,24 +157,30 @@ io.on('connection', (socket) => {
         console.log('Usuario desconectado');
         
     });
-    socket.on('getMessages',(callback)=>{
-        let messages;
-        console.log('Mensaje recibido: /getMessages');
-        dbOperations.getMessages(emisorUser)
-        .then((results)=>{
-            messages=results;
-            console.log(messages);
-            console.log('Devolviendo mensajes de ' + emisorUser +':');
 
-            callback(messages);
-            //io.emit('obtenerAmigos', amigos);
-        })
-        .catch((error)=>{
-            console.log(error);
-        });
+    socket.on('getMessages', (destino, callback) => {
+        let messages;
+        console.log('Mensaje recibido: /getMessages'+destino);
         
-        // Reenviar el mensaje a todos los clientes conectados
-    })
+        dbOperations.getMessages(emisorUser, destino)
+            .then((results) => {
+                messages = results;
+                console.log(messages);
+                console.log('Devolviendo mensajes de ' + emisorUser + ':');
+    
+                // Asegúrate de pasar 'null' como primer argumento si no hay error.
+                callback(messages);
+                // io.emit('obtenerAmigos', amigos);
+            })
+            .catch((error) => {
+                console.log(error);
+    
+                // En caso de error, pasa el error como primer argumento en la llamada de vuelta.
+                callback(error);
+            });
+        
+        // Resto del código...
+    });
 
     socket.on('verAmigos', (callback) => {
         let amigos;

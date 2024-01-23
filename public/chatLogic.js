@@ -15,12 +15,13 @@ fetch('/config')
         const scrollDown = ()=>{
             chatContainer.scrollTop = chatContainer.scrollHeight;
         };        
-        const getMessages=()=>{
-
+        function getMessages(destino) {
+            
+            console.log('Valor de destino:', destino);
+            
             return new Promise(resolve => {
-                socket.emit('getMessages', (messages) => {
+                socket.emit('getMessages', destino, (messages) => {
                     resolve(messages);
-                    
                 });
             });
         }
@@ -71,8 +72,6 @@ fetch('/config')
                 //fecha = formatFecha(fecha);
                 colocarMensajeRecibido(emisor,message,fecha);
             })
-
-            
             
         })
         
@@ -84,7 +83,6 @@ fetch('/config')
             scrollDown();
         }
         const colocarMensajeRecibido = (emisor,mensaje,fecha)=>{
-
             const fechaContainer = '<div class="fecha-message">'+ getHoraYminutos(fecha) +'</div>';
             $('#messages-container').append(`<div class="message-income-container"><div class="message-income">${emisor}: ` + mensaje + fechaContainer + '</div></div>');
             scrollDown();
@@ -99,10 +97,9 @@ fetch('/config')
         $(document).ready(function() {
             // Función para enviar mensajes
             function sendMessage() {
-                
-
-
                 var message = $('#message-input').val();
+
+                
                 if (message.trim() !== '') {
                     
                     const destination = $('#destination-input').val();
@@ -118,12 +115,12 @@ fetch('/config')
                     colocarMensajeEnviado(message,data.fecha);
                     socket.emit('toServer', data);
 
-                    // Puedes enviar el mensaje al backend aquí si es necesario
                 }
             }
 
             // Evento al hacer clic en el botón de enviar
             $('#send-button').on('click', function() {
+                
                 sendMessage();
             });
 
@@ -131,10 +128,25 @@ fetch('/config')
             $('#message-input').on('keypress', function(e) {
                 if (e.which === 13) {
                     sendMessage();
-                    
                 }
             });
             
+            $('#send-button-destination').on('click',function(e){
+                const destino = document.getElementById('destination-input').value;
+                const contenedor = document.getElementById('messages-container');
+                    contenedor.innerHTML = '';
+                getMessages(destino)
+                .then((messages)=>{
+                    
+                    setChat(messages,myUsername);
+
+                    console.log(myUsername);
+                })
+                .catch((error)=>{
+                    console.log(error);
+                })
+            })
+
         });
     }).catch((error)=>{
         console.log(error);

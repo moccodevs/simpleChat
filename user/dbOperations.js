@@ -42,10 +42,11 @@ const saveMsgToDb = (msg) => {
         );
     });
 }
-const getMessages = (username) => {
-    
+const getMessages = (emisor,destinatario) => {
+    console.log('emisor: '+emisor);
+    console.log('destinatario: '+ destinatario);
     return new Promise((resolve, reject) => {
-        connection.query(`SELECT * FROM chats WHERE emisor='${username}' or destino='${username}'`,
+        connection.query(`SELECT * FROM chats WHERE (emisor='${emisor}' AND destino='${destinatario}') OR (emisor='${destinatario}' AND destino='${emisor}')`,
             (error, results) => {
                 if (error) {
                     reject(error);
