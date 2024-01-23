@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
+
 const app = express();
-const PORT= 3000;
-const URL = '192.168.1.47';
+const config = require('./config.server');
 const user = require('./user/loginRoutes');
 const dotenv = require ('dotenv');
 const http = require('http');
@@ -32,8 +32,8 @@ const {connection}=require('./config.db');
 app.use(user);
 
 
-const server = app.listen(PORT,URL,()=> {
-    console.log(`Servidor corriendo en el puerto ${PORT}`);
+const server = app.listen(config.serverPort,config.serverUrl,()=> {
+    console.log(`Servidor corriendo en el puerto ${config.serverPort}`);
     connection.query(`UPDATE users SET token='no token', logged=0`,(error,results)=>{
         console.log(__dirname);
         if (error){
@@ -42,6 +42,7 @@ const server = app.listen(PORT,URL,()=> {
         console.log('base inicializada');
     })
 });
+
 
 const io=socketIO(server);
 
@@ -137,7 +138,7 @@ io.on('connection', (socket) => {
         .then(()=>{
             console.log(message);
             //Una vez recopilados los datos necesarios, reenvía la información al usuario destino
-            
+
             io.to(destination).emit('receiveMessage', {message:`${message}`,emisor:`${emisor}`,fecha:`${fecha}`});
             dbOperations.saveMsgToDb(msg)
             .then((msg)=>{

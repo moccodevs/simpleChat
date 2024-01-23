@@ -1,4 +1,14 @@
-const socket = io('http://192.168.1.47:3000');
+fetch('/config')
+.then(response => {
+    if (!response.ok) {
+    throw new Error('Error al obtener la configuración');
+}
+    return response.json();
+})
+.then(config=>{
+  console.log(config);
+  const socket = io(`${config.serverUrl}:${config.serverPort}`);
+
 
         let sessionID;
         var chatContainer = document.getElementById('messages-container');
@@ -21,12 +31,12 @@ const socket = io('http://192.168.1.47:3000');
                 const emisor = currentObject.emisor;
                 const destination = currentObject.destino;
                 const message = currentObject.mensaje;
-                const fecha = currentObject.fecha;
-                
-                
+                let fecha = currentObject.fecha;
+                fecha=new Date(`${fecha}`);
                 console.log(`Emisor: ${emisor}, Destino: ${destination}, Mensaje: ${message}, Fecha: ${fecha}`);
                 if (emisor!=myUsername){
                     socket.emit('receiveMessage',{message:`${message}`,emisor:`${emisor}`});
+
                     colocarMensajeRecibido(emisor,message,fecha);
                 }
                 else{
@@ -68,20 +78,24 @@ const socket = io('http://192.168.1.47:3000');
         
         
         const colocarMensajeEnviado = (mensaje,fecha)=>{
-            const fechaObject=new Date(`${fecha}`);
-            var minutosConDosDigitos = fechaObject.getMinutes() < 10 ? '0' + fechaObject.getMinutes() : fechaObject.getMinutes();
-            const fechaContainer = '<div class="fecha-message">'+ fechaObject.getHours()+':'+ minutosConDosDigitos +'</div>';
+            const fechaContainer = '<div class="fecha-message">'+ getHoraYminutos(fecha) +'</div>';
             $('#messages-container').append('<div class="message-outcome-container"><div class="message-send">Tú: ' + mensaje +fechaContainer+ '</div></div>');
             $('#message-input').val('');
             scrollDown();
         }
         const colocarMensajeRecibido = (emisor,mensaje,fecha)=>{
-            const fechaObject=new Date(`${fecha}`);
-            var minutosConDosDigitos = fechaObject.getMinutes() < 10 ? '0' + fechaObject.getMinutes() : fechaObject.getMinutes();
-            const fechaContainer = '<div class="fecha-message">'+ fechaObject.getHours()+':'+ minutosConDosDigitos +'</div>';
+
+            const fechaContainer = '<div class="fecha-message">'+ getHoraYminutos(fecha) +'</div>';
             $('#messages-container').append(`<div class="message-income-container"><div class="message-income">${emisor}: ` + mensaje + fechaContainer + '</div></div>');
             scrollDown();
         }
+
+        const getHoraYminutos=(fecha)=>{
+            const fechaObject=new Date(`${fecha}`);
+            var minutosConDosDigitos = fechaObject.getMinutes() < 10 ? '0' + fechaObject.getMinutes() : fechaObject.getMinutes();
+            return (fechaObject.getHours())+':'+minutosConDosDigitos;
+        }
+
         $(document).ready(function() {
             // Función para enviar mensajes
             function sendMessage() {
@@ -122,3 +136,6 @@ const socket = io('http://192.168.1.47:3000');
             });
             
         });
+    }).catch((error)=>{
+        console.log(error);
+    })

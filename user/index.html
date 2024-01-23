@@ -19,12 +19,21 @@
   </form>
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script>
-    const enviarData=document.getElementById('enviarData');
+    fetch('/config')
+      .then(response => {
+          if (!response.ok) {
+          throw new Error('Error al obtener la configuración');
+      }
+          return response.json();
+      })
+      .then(config=>{
+        console.log(config);
+        loguear(config);
+      })
+      .catch(error => console.error('Error al obtener la configuración', error))
     
-    // Configurar la solicitud
-    
-    
-    document.getElementById('send-button').addEventListener('click', function() {
+    const loguear=(config)=>{
+      document.getElementById('send-button').addEventListener('click', function() {
       const datosMensaje = {
           'usuario': $('#usuario').val(),
           'contrasena': $('#contrasena').val()
@@ -39,7 +48,7 @@
 
       
 
-      fetch('http://192.168.1.47:3000/validate',solicitudConfig)
+      fetch('http://'+config.serverUrl+':'+config.serverPort+'/validate',solicitudConfig)
         .then(response => {
         if (!response.ok) { 
             throw new Error(`Error de red: ${response.status}`);
@@ -51,6 +60,8 @@
           console.error('Error en la solicitud:', error);
         });
     });
+    }
+   
   </script>
 </body>
 

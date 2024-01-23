@@ -104,6 +104,8 @@ const validarToken=(req,res,next)=>{
     }
     
     console.log('validando token');
+    
+    console.log('token :'+sessionKey);
     connection.query(`SELECT username FROM users WHERE token= '${sessionKey}'`,
     (error,results) => {
         if (error){

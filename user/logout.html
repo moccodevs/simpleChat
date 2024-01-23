@@ -20,7 +20,7 @@
           'Content-Type': 'application/json'
           }
       };
-      fetch('http://192.168.1.47:3000/desloguear',solicitudConfig)
+      fetch('localhost:3000/desloguear',solicitudConfig)
         .then(response => {
         if (!response.ok) { 
             throw new Error(`Error de red: ${response.status}`);

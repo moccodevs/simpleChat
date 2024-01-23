@@ -15,7 +15,20 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <script>
-        const socket = io('http://192.168.1.47:3000');
+        fetch('/config')
+      .then(response => {
+          if (!response.ok) {
+          throw new Error('Error al obtener la configuración');
+      }
+          return response.json();
+      })
+      .then(config=>{
+        console.log(config);
+        const socket = io(`${config.serverUrl}:${config.serverPort}`);
+      })
+      .catch(error => console.error('Error al obtener la configuración', error))
+
+        
         document.addEventListener('DOMContentLoaded', async () => {
             const usuarios = await obtenerUsuariosConectados();
             console.log(usuarios);

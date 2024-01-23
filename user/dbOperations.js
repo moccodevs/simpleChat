@@ -23,6 +23,9 @@ const getAmigos = (usuario)=>{
 const saveMsgToDb = (msg) => {
     const {emisor,destination,message,fecha}=msg;
     console.log('mensaje a guardar:'+msg);
+    
+    
+
     return new Promise((resolve, reject) => {
         connection.query(`INSERT INTO chats(emisor,destino,mensaje,fecha) VALUES('${emisor}','${destination}','${message}','${fecha}')`,
             (error, results) => {
@@ -52,7 +55,11 @@ const getMessages = (username) => {
                 if (results.length > 0) {
                     for (const rowDataPacket of results) {
                         // Formatear la fecha antes de imprimir
-                        //rowDataPacket.fecha = formatearFecha(rowDataPacket.fecha);
+                        
+                        let timeZoneArg=new Date(`${rowDataPacket.fecha}`);
+                        //timeZoneArg.setHours(timeZoneArg.getHours()-3);
+                        
+                        rowDataPacket.fecha = timeZoneArg;
                         console.log(results);
                       }
                     resolve(results);
