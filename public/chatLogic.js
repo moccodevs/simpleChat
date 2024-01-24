@@ -65,7 +65,8 @@ fetch('/config')
             div.appendChild(divNuevo);
             let messages;
             const destino=document.getElementById('selectUsuarios').value;
-            
+            //se fuerza a mostrar el primer chat
+            $('#selectUsuarios').trigger('change');
             getMessages(destino)
                 .then((destino)=>{
                     setChat(messages,myUsername);
@@ -80,7 +81,7 @@ fetch('/config')
                 //fecha = formatFecha(fecha);
                 colocarMensajeRecibido(emisor,message,fecha);
             })
-            $('#selectUsuarios').trigger('change');
+            
         })
         
         const colocarMensajeEnviado = (mensaje,fecha)=>{
