@@ -6,9 +6,11 @@ fetch('/config')
     return response.json();
 })
 .then(config=>{
+    
+        
         console.log(config);
         const socket = io(`${config.serverUrl}:${config.serverPort}`);
-    
+
         let sessionID;
         var chatContainer = document.getElementById('messages-container');
         const scrollDown = ()=>{
@@ -55,7 +57,6 @@ fetch('/config')
 
         socket.on('getIdentity',(message)=>{
            
-            $('#message-input').val('');
             myUsername = message;
             var div = document.getElementById("div");
             var divNuevo = document.createElement("bienvenido");
@@ -64,6 +65,7 @@ fetch('/config')
             div.appendChild(divNuevo);
             let messages;
             const destino=document.getElementById('selectUsuarios').value;
+            
             getMessages(destino)
                 .then((destino)=>{
                     setChat(messages,myUsername);
@@ -78,9 +80,8 @@ fetch('/config')
                 //fecha = formatFecha(fecha);
                 colocarMensajeRecibido(emisor,message,fecha);
             })
-            
+            $('#selectUsuarios').trigger('change');
         })
-        
         
         const colocarMensajeEnviado = (mensaje,fecha)=>{
             const fechaContainer = '<div class="fecha-message">'+ getHoraYminutos(fecha) +'</div>';
@@ -101,6 +102,7 @@ fetch('/config')
         }
 
         $(document).ready(function() {
+            
             // Función para enviar mensajes
             function sendMessage() {
                 var message = $('#message-input').val();
@@ -108,7 +110,7 @@ fetch('/config')
                 
                 if (message.trim() !== '') {
                     
-                    const destination = $('#destination-input').val();
+                    const destination = $('#selectUsuarios').val();
                     const fechaActual = new Date();
                     
                     //const fechaNowFormateada = fechaActual.toISOString().slice(0, 19).replace('T', ' ');
@@ -138,7 +140,10 @@ fetch('/config')
                 }
             });
             
-            $('#send-button-destination').on('click',function(e){
+
+            $('#selectUsuarios').on('change',cargarMensajes);
+
+            function cargarMensajes(){
                 const destino = document.getElementById('selectUsuarios').value;
                 console.log(destino)
                 const contenedor = document.getElementById('messages-container');
@@ -147,32 +152,18 @@ fetch('/config')
                 .then((messages)=>{
                     
                     setChat(messages,myUsername);
-
+            
                     console.log(myUsername);
                 })
                 .catch((error)=>{
                     console.log(error);
                 })
-            })
-            $('#selectUsuarios').on('change',function(e){
-                const destino = document.getElementById('selectUsuarios').value;
-                console.log(destino)
-                const contenedor = document.getElementById('messages-container');
-                    contenedor.innerHTML = '';
-                getMessages(destino)
-                .then((messages)=>{
-                    
-                    setChat(messages,myUsername);
-
-                    console.log(myUsername);
-                })
-                .catch((error)=>{
-                    console.log(error);
-                })
-            })
-
+            }
         });
-    }).catch((error)=>{
+        
+        
+    })    
+    .catch((error)=>{
         console.log(error);
     })
 /******************************************************************AMIGOS*********************************************************** */

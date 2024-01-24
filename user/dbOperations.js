@@ -55,13 +55,11 @@ const getMessages = (emisor,destinatario) => {
 
                 if (results.length > 0) {
                     for (const rowDataPacket of results) {
-                        // Formatear la fecha antes de imprimir
                         
                         let timeZoneArg=new Date(`${rowDataPacket.fecha}`);
                         //timeZoneArg.setHours(timeZoneArg.getHours()-3);
                         
                         rowDataPacket.fecha = timeZoneArg;
-                        console.log(results);
                       }
                     resolve(results);
                 }

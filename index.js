@@ -157,7 +157,6 @@ io.on('connection', (socket) => {
         dbOperations.getMessages(emisorUser, destino)
             .then((results) => {
                 messages = results;
-                console.log(messages);
                 console.log('Devolviendo mensajes de ' + emisorUser + ':');
     
                 callback(messages);
@@ -173,15 +172,26 @@ io.on('connection', (socket) => {
     });
 
     socket.on('verAmigos', (callback) => {
-        let amigos;
+        let usuarios;
         console.log('Mensaje recibido: verAmigos', callback);
         dbOperations.getAmigos(emisorUser)
         .then((results)=>{
-            amigos=results;
+            usuarios=results;
             console.log(results);
             console.log('Amigos de ' + emisorUser +':');
-            console.log(amigos);
-            callback(amigos);
+            console.log(usuarios);
+            usuarios.forEach(usuario =>{
+                if (usuario.usuario1==emisorUser){
+                    usuario.amigo=usuario.usuario2;
+                    
+                }else{
+                    usuario.amigo=usuario.usuario1;
+                }
+            })
+           
+            
+            console.log(usuarios);
+            callback(usuarios);
             //io.emit('obtenerAmigos', amigos);
         })
         .catch((error)=>{

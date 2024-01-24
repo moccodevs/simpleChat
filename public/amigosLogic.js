@@ -18,8 +18,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         usuarios.forEach(usuario => {
             const opcionUsuario = document.createElement('option');
-            opcionUsuario.value = usuario.usuario2;
-            opcionUsuario.textContent = usuario.usuario2;
+            opcionUsuario.value = usuario.amigo;
+            opcionUsuario.textContent = usuario.amigo;
             selectUsuarios.appendChild(opcionUsuario);
         });
     }
