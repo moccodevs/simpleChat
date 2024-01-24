@@ -35,7 +35,8 @@ app.use(session({
 
 
 app.get('/login',loginValidations.isSesionInactive, (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    const main = path.join(__dirname, '..');
+    res.sendFile(main+'/public/index.html');
 });
 app.post('/login',loginValidations.isSesionInactive, (req, res) => {
     const sessionKey = req.sessionID;

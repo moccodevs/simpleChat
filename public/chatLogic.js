@@ -6,10 +6,9 @@ fetch('/config')
     return response.json();
 })
 .then(config=>{
-  console.log(config);
-  const socket = io(`${config.serverUrl}:${config.serverPort}`);
-
-
+        console.log(config);
+        const socket = io(`${config.serverUrl}:${config.serverPort}`);
+    
         let sessionID;
         var chatContainer = document.getElementById('messages-container');
         const scrollDown = ()=>{
@@ -25,6 +24,7 @@ fetch('/config')
                 });
             });
         }
+        
         const setChat = (messages,myUsername)=>{
             for (let i = 0; i < messages.length; i++) {
                 const currentObject = messages[i];
@@ -54,12 +54,18 @@ fetch('/config')
         }
 
         socket.on('getIdentity',(message)=>{
-            //$('#messages-container').append('<div class="message">Mi token: ' + message + '</div>');
+           
             $('#message-input').val('');
             myUsername = message;
+            var div = document.getElementById("div");
+            var divNuevo = document.createElement("bienvenido");
+            divNuevo.id = "divNuevo";
+            divNuevo.textContent = "Bienvenido: " + myUsername + "!";
+            div.appendChild(divNuevo);
             let messages;
-            getMessages(messages)
-                .then((messages)=>{
+            const destino=document.getElementById('selectUsuarios').value;
+            getMessages(destino)
+                .then((destino)=>{
                     setChat(messages,myUsername);
                     console.log(myUsername);
                 })
@@ -114,7 +120,8 @@ fetch('/config')
                     }
                     colocarMensajeEnviado(message,data.fecha);
                     socket.emit('toServer', data);
-
+                    
+            
                 }
             }
 
@@ -132,7 +139,24 @@ fetch('/config')
             });
             
             $('#send-button-destination').on('click',function(e){
-                const destino = document.getElementById('destination-input').value;
+                const destino = document.getElementById('selectUsuarios').value;
+                console.log(destino)
+                const contenedor = document.getElementById('messages-container');
+                    contenedor.innerHTML = '';
+                getMessages(destino)
+                .then((messages)=>{
+                    
+                    setChat(messages,myUsername);
+
+                    console.log(myUsername);
+                })
+                .catch((error)=>{
+                    console.log(error);
+                })
+            })
+            $('#selectUsuarios').on('change',function(e){
+                const destino = document.getElementById('selectUsuarios').value;
+                console.log(destino)
                 const contenedor = document.getElementById('messages-container');
                     contenedor.innerHTML = '';
                 getMessages(destino)
@@ -151,3 +175,4 @@ fetch('/config')
     }).catch((error)=>{
         console.log(error);
     })
+/******************************************************************AMIGOS*********************************************************** */

@@ -33,13 +33,14 @@ app.use(user);
 
 
 const server = app.listen(config.serverPort,config.serverUrl,()=> {
-    console.log(`Servidor corriendo en el puerto ${config.serverPort}`);
+    console.log(`Servidor corriendo en "http://${config.serverUrl}:${config.serverPort}"`);
     connection.query(`UPDATE users SET token='no token', logged=0`,(error,results)=>{
         console.log(__dirname);
         if (error){
             console.log('no se pudo inicializar la base');
         }
         console.log('base inicializada');
+        
     })
 });
 
@@ -48,13 +49,10 @@ const io=socketIO(server);
 
 /*
 io.use((socket, next) => {
-    // Llama al middleware y pásale el socket u otros datos necesarios
     tokenValidations.validarToken((req,res,next) => {
         if (error) {
-            // Maneja el error, por ejemplo, puedes usar 'next' con un argumento de error
             console.log('token invalido');
         }
-        // Puedes hacer algo con los datos si es necesario
         console.log('Token válido:', data);
         next();
     });
@@ -62,7 +60,6 @@ io.use((socket, next) => {
 */
 /*
 io.use((socket, next) => {
-    // Llama al middleware y pásale el socket u otros datos necesarios
     try{
         let sessionCookie = socket.handshake.headers.cookie;
         console.log(req);
@@ -101,14 +98,12 @@ io.on('connection', (socket) => {
     
 
     let emisorUser;
-    //busca en la base de datos el nombre de usuario emisor mediante su token
     tokenValidations.getNombreByToken(sessionId)
     .then((nombreUsuario) => {
         emisorUser=nombreUsuario;
         console.log('Usuario conectado:'+emisorUser);
         socket.emit(`getIdentity`,emisorUser);
         socket.join(emisorUser);
-        // En este bloque .then(), puedes acceder al nombre de usuario resuelto
     })
     .catch((error) => {
             console.log('Error:', error);
@@ -123,13 +118,10 @@ io.on('connection', (socket) => {
         msg.emisor=emisorUser;
         let destinationToken;
         
-        //busca en la base de datos el token del usuario receptor dado su nombre de usuario
         tokenValidations.getTokenByUsername(destination)
         .then((token) => {
             destinationToken=token;
-            // En este bloque .then(), puedes acceder al nombre de usuario resuelto
             console.log('Token usuario receptor:', destinationToken);
-            // Puedes continuar con la lógica usando el nombre de usuario
         })
         .catch((error) => {
                 console.log('Error:', error);
@@ -168,14 +160,12 @@ io.on('connection', (socket) => {
                 console.log(messages);
                 console.log('Devolviendo mensajes de ' + emisorUser + ':');
     
-                // Asegúrate de pasar 'null' como primer argumento si no hay error.
                 callback(messages);
                 // io.emit('obtenerAmigos', amigos);
             })
             .catch((error) => {
                 console.log(error);
     
-                // En caso de error, pasa el error como primer argumento en la llamada de vuelta.
                 callback(error);
             });
         
@@ -184,7 +174,7 @@ io.on('connection', (socket) => {
 
     socket.on('verAmigos', (callback) => {
         let amigos;
-        console.log('Mensaje recibido:', callback);
+        console.log('Mensaje recibido: verAmigos', callback);
         dbOperations.getAmigos(emisorUser)
         .then((results)=>{
             amigos=results;

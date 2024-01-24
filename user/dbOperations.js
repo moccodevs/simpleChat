@@ -2,7 +2,7 @@ const { connection } = require ('../config.db');
 
 const getAmigos = (usuario)=>{
     return new Promise((resolve, reject) => {
-        connection.query(`SELECT usuario2 FROM amigos WHERE usuario1='${usuario}'`,
+        connection.query(`SELECT usuario1,usuario2 FROM amigos WHERE usuario1='${usuario}' OR usuario2='${usuario}'`,
             (error, results) => {
                 if (error) {
                     reject(error);
