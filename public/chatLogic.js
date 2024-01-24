@@ -56,7 +56,7 @@ fetch('/config')
         }
 
         socket.on('getIdentity',(message)=>{
-           
+            document.getElementById("div").textContent='';
             myUsername = message;
             var div = document.getElementById("div");
             var divNuevo = document.createElement("bienvenido");
