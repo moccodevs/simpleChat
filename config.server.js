@@ -1,7 +1,7 @@
 module.exports = {
     //serverUrl: '192.168.1.44',
-    serverUrl: 'localhost',
-    serverPort: 8077,
+    serverUrl: '0.0.0.0',
+    serverPort: 10000,
   };
 
   
