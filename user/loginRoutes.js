@@ -34,13 +34,13 @@ app.use(session({
 
 
 
-app.get(['/','/login'],loginValidations.isSesionInactive, (req, res) => {
+app.get('/login',loginValidations.isSesionInactive, (req, res) => {
     const main = path.join(__dirname, '..');
     res.sendFile(main+'/public/index.html');
 });
 
 
-app.post('/login',loginValidations.isSesionInactive, (req, res) => {
+app.post(['/','/login'],loginValidations.isSesionInactive, (req, res) => {
     const sessionKey = req.sessionID;
     console.log(sessionKey);
     res.redirect('/login');
@@ -54,13 +54,13 @@ app.post('/validate',tokenValidations.tokenExiste,loginValidations.validarUsuari
 app.use(tokenValidations.validarToken);
 
 
-
+/*
 app.get('/desloguear', (req, res) => {
     console.log('deslogueando');
     const sessionKey = req.sessionID;
     console.log(sessionKey);
     res.sendFile(__dirname + '/logout.html');
-});
+});*/
 
 app.post('/desloguear', (req, res) => {
     const sessionKey = req.sessionID;
@@ -82,6 +82,7 @@ app.get('/chat', (req,res)=>{
     const main = path.join(__dirname, '..');
     res.sendFile(main+'/public/chatFront.html');
 });
+
 
 app.get('/testAmigos', (req,res)=>{
     console.log('alguien llegó al chat');

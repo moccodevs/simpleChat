@@ -27,6 +27,7 @@ const isSesionInactive=(req,res,next)=>{
 
         if (Object.keys(results).length>0){
             console.log('Sesion activa');
+
             res.status(401).redirect('/chat');
         }
         else{
