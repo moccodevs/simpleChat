@@ -32,8 +32,8 @@ const {connection}=require('./config.db');
 app.use(user);
 
 
-const server = app.listen(config.serverPort,config.serverUrl,()=> {
-    console.log(`Servidor corriendo en "http://${config.serverUrl}:${config.serverPort}"`);
+const server = app.listen(config.serverPort,config.serverListenUrl,()=> {
+    console.log(`Servidor corriendo en "http://${config.serverListenUrl}:${config.serverPort}"`);
     connection.query(`UPDATE users SET token='no token', logged=0`,(error,results)=>{
         console.log(__dirname);
         if (error){
