@@ -1,6 +1,6 @@
 module.exports = {
     //serverUrl: '192.168.1.44',
-    serverUrl: '34.86.119.124',
+    serverUrl: 'simplechat-production.up.railway.app/',
     serverPort: 80,
   };
 
