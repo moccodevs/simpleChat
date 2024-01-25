@@ -2,13 +2,14 @@ const dotenv=require('dotenv');
 const mysql=require('mysql');
 let connection;
 
-connection = mysql.createConnection({
-    port:process.env.PORT,
+connection = mysql.createConnection(
+    /*{port:process.env.PORT,
     host:process.env.DBHOST,
     user:process.env.DBUSER,
     database:process.env.DBNAME,
-    password:process.env.DBPASS
-});
+    password:process.env.DBPASS}*/
+    process.env.connectionUri
+);
 
 connection.connect((error)=>{
     if (error){
