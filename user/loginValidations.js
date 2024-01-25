@@ -19,10 +19,8 @@ const validarUsuario = (req,res,next)=>{
 }
 
 const isSesionInactive=(req,res,next)=>{
-    
     const sessionKey = req.sessionID;
-    try{
-        connection.query(`SELECT logged FROM users WHERE token = '${sessionKey}' AND logged=1`,
+    connection.query(`SELECT logged FROM users WHERE token = '${sessionKey}' AND logged=1`,
     (error,results) => {
         
         console.log('sesion activa? largo: '+Object.keys(results).length );
@@ -38,11 +36,6 @@ const isSesionInactive=(req,res,next)=>{
         }
         
     });
-    }
-    catch(error){
-        next();
-    }
-    
 }
 
 
