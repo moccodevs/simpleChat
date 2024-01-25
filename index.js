@@ -37,9 +37,12 @@ const server = app.listen(config.serverPort,config.serverUrl,()=> {
     connection.query(`UPDATE users SET token='no token', logged=0`,(error,results)=>{
         console.log(__dirname);
         if (error){
-            console.log('no se pudo inicializar la base');
+            console.log('Error al inicializar la base de datos');
         }
-        console.log('base inicializada');
+        else{
+            console.log('base de datos inicializada');
+        }
+        
         
     })
 });

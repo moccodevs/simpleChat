@@ -10,7 +10,7 @@ fetch('/config')
         
         console.log(config);
         const socket = io(`${config.serverUrl}:${config.serverPort}`);
-
+        
         let sessionID;
         var chatContainer = document.getElementById('messages-container');
         const scrollDown = ()=>{
@@ -25,6 +25,7 @@ fetch('/config')
                     resolve(messages);
                 });
             });
+            
         }
         
         const setChat = (messages,myUsername)=>{
@@ -62,11 +63,11 @@ fetch('/config')
             var divNuevo = document.createElement("bienvenido");
             divNuevo.id = "divNuevo";
             divNuevo.textContent = "Bienvenido: " + myUsername + "!";
+            $('#selectUsuarios').trigger('change')
             div.appendChild(divNuevo);
             let messages;
             const destino=document.getElementById('selectUsuarios').value;
-            //se fuerza a mostrar el primer chat
-            $('#selectUsuarios').trigger('change');
+            
             getMessages(destino)
                 .then((destino)=>{
                     setChat(messages,myUsername);
@@ -79,11 +80,15 @@ fetch('/config')
             
             socket.on('receiveMessage',({message,emisor,fecha})=>{
                 //fecha = formatFecha(fecha);
-                colocarMensajeRecibido(emisor,message,fecha);
+                const destino = document.getElementById('selectUsuarios').value;
+                if (emisor==$('#selectUsuarios').val()){
+                    colocarMensajeRecibido(emisor,message,fecha);
+                }
+                
             })
             
         })
-        
+        $('#selectUsuarios').trigger('change');
         const colocarMensajeEnviado = (mensaje,fecha)=>{
             const fechaContainer = '<div class="fecha-message">'+ getHoraYminutos(fecha) +'</div>';
             $('#messages-container').append('<div class="message-outcome-container"><div class="message-send">Tú: ' + mensaje +fechaContainer+ '</div></div>');
@@ -160,11 +165,8 @@ fetch('/config')
                     console.log(error);
                 })
             }
-        });
-        
-        
-    })    
+        });        
+    })
     .catch((error)=>{
         console.log(error);
     })
-/******************************************************************AMIGOS*********************************************************** */

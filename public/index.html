@@ -1,24 +1,102 @@
-<!-- index.html -->
+<style>
+  
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #797979;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.login-container {
+  background-color: #ffffff93;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.404);
+  padding: 20px;
+  border-radius: 20px;
+  text-align: center;
+}
+
+#login-box {
+            width: 220px;
+            max-width: 95%;
+            margin: 10px auto;
+            background-color: #00000063;
+            border-radius: 20px;
+            overflow: hidden;
+            text-align: center;
+            /* height: calc(30vh - 30px); Resta 30px para dejar espacio para el #messages-container y el margen superior */
+        }
+
+h1 {
+  color: #ffffff;
+      font-size: x-large;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+label {
+  font-size: medium;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #000000;
+  margin-bottom: 8px;
+}
+
+input {
+  padding: 10px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+button {
+  background-color: #00677967;
+  color: #fff;
+  padding: 12px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+
+}
+
+button:hover {
+  background-color: #00e1ff73;
+  color:rgb(255, 255, 255)
+}
+</style>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Iniciar sesión</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Login Elegante</title>
 </head>
 <body>
-  <h2>Iniciar sesión</h2>
-  <form method="POST">
-    <label for="usuario">Usuario:</label>
-    <input type="text" id="usuario" name="usuario" required>
-    <br>
-    <label for="contrasena">Contraseña:</label>
-    <input type="password" id="contrasena" name="contrasena" required>
-    <br>
-    <button id="send-button" type="submit">Iniciar sesión</button>
-  </form>
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-  <script src="/loginLogic.js"></script>
-</body>
+    <div class="login-container">
+      <div id="login-box">
+        <h1>Login</h1>
+      </div>
+        <form action="#" method="post">
+            <label for="usuario">Usuario:</label>
+            <input type="text" id="usuario" name="usuario" required>
 
+            <label for="contrasena">Contraseña:</label>
+            <input type="password" id="contrasena" name="contrasena" required>
+
+            <button type="submit" id="send-button">Iniciar sesión</button>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="/loginLogic.js"></script>
+</body>
 </html>

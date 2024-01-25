@@ -1,11 +1,33 @@
-const socket = io(`localhost:3000`);
+    document.addEventListener('DOMContentLoaded', async () => {
+        fetch('/config')
+        .then(response => {
+            if (!response.ok) {
+            throw new Error('Error al obtener la configuración');
+        }
+            return response.json();
+        })
+        .then(config=>{
+            const socket = io(`${config.serverUrl}:${config.serverPort}`);
+            obtenerUsuariosConectados(socket)
+            .then((usuarios)=>{
+                llenarMenuDesplegable(usuarios);
 
-document.addEventListener('DOMContentLoaded', async () => {
-        const usuarios = await obtenerUsuariosConectados();
-        console.log(usuarios);
-        llenarMenuDesplegable(usuarios);
+                /*Fuerza a mostrar el chat inicial */
+                $('#selectUsuarios').trigger('change')
+                
+            }).catch((error)=>{
+                console.log('error al obtener usuarios');
+            });
+            return
+        })
+        .catch((error)=>{
+            console.log(error);
+        })
+
+        
+        
     });
-    async function obtenerUsuariosConectados() {
+    async function obtenerUsuariosConectados(socket) {
         return new Promise(resolve => {
             socket.emit('verAmigos', (usuarios) => {
                 resolve(usuarios);
