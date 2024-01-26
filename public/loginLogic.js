@@ -27,7 +27,7 @@ const solicitudConfig = {
 
 
 
-fetch('http://'+config.serverUrl+':'+config.serverPort+'/validate',solicitudConfig)
+fetch(config.serverUrl+':'+config.serverPort+'/validate',solicitudConfig)
   .then(response => {
   if (!response.ok) { 
       throw new Error(`Error de red: ${response.status}`);
