@@ -15,7 +15,8 @@ app.get('/config', (req, res) => {
     console.log(config);
     const conf={
         serverUrl:`${config.serverUrl}`,
-        serverPort:`${config.serverPort}`
+        serverPort:`${config.serverPort}`,
+        socketUrl:`${config.socketUrl}`
     }
     res.status(200).json(conf);
   });
