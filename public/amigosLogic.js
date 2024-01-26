@@ -7,7 +7,7 @@
             return response.json();
         })
         .then(config=>{
-            const socket = io(`${config.socketUrl}:${config.serverPort}`);
+            const socket = io(`${config.serverListenUrl}`);
             obtenerUsuariosConectados(socket)
             .then((usuarios)=>{
                 llenarMenuDesplegable(usuarios);
