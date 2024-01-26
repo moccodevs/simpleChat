@@ -24,10 +24,10 @@ const saveMsgToDb = (msg) => {
     const {emisor,destination,message,fecha}=msg;
     console.log('mensaje a guardar:'+msg);
     
-    
+    fechaFormateada=formatearFecha(fecha);
 
     return new Promise((resolve, reject) => {
-        connection.query(`INSERT INTO chats(emisor,destino,mensaje,fecha) VALUES('${emisor}','${destination}','${message}','${fecha}')`,
+        connection.query(`INSERT INTO chats(emisor,destino,mensaje,fecha) VALUES('${emisor}','${destination}','${message}','${fechaFormateada}')`,
             (error, results) => {
                 if (error) {
                     reject(error);
@@ -69,8 +69,7 @@ const getMessages = (emisor,destinatario) => {
 }
 
 function formatearFecha(fecha) {
-    const opcionesDeFormato = { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' };
-    return new Intl.DateTimeFormat('es-ES', opcionesDeFormato).format(fecha);
+    return new Date('2024-01-26T01:42:10.019Z').toISOString().slice(0, 19).replace('T', ' ');
   }
 
 module.exports = {

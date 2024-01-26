@@ -91,7 +91,6 @@ io.use((socket,next)=>{
     const sessionId = sessionCookie.slice(startIndex, endIndex);
     tokenValidations.validarTokenSocket(sessionId,next);
     socket.token=sessionId;
-        
     }    
 );
 
