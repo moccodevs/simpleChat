@@ -8,8 +8,7 @@ fetch('/config')
 .then(config=>{
   console.log(config);
   loguear(config);
-})
-.catch(error => console.error('Error al obtener la configuración', error))
+
 
 const loguear=(config)=>{
 document.getElementById('send-button').addEventListener('click', function() {
@@ -40,3 +39,5 @@ fetch(config.serverUrl+':'+config.serverPort+'/validate',solicitudConfig)
   });
 });
 }
+})
+.catch(error => console.error('Error al obtener la configuración', error))
