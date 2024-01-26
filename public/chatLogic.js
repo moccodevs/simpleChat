@@ -9,7 +9,7 @@ fetch('/config')
     
         
         console.log(config);
-        const socket = io(`${config.serverUrl}:${config.serverPort}`);
+        const socket = io(`${config.serverListenUrl}:${config.serverPort}`);
         
         let sessionID;
         var chatContainer = document.getElementById('messages-container');
