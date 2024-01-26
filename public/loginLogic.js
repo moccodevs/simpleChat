@@ -8,7 +8,8 @@ fetch('/config')
 .then(config=>{
   console.log(config);
   loguear(config);
-
+})
+.catch(error => console.error('Error al obtener la configuración', error))
 
 const loguear=(config)=>{
 document.getElementById('send-button').addEventListener('click', function() {
@@ -26,7 +27,7 @@ const solicitudConfig = {
 
 
 
-fetch(config.serverUrl+':'+config.serverPort+'/validate',solicitudConfig)
+fetch(config.serverUrl+'/validate',solicitudConfig)
   .then(response => {
   if (!response.ok) { 
       throw new Error(`Error de red: ${response.status}`);
@@ -39,5 +40,3 @@ fetch(config.serverUrl+':'+config.serverPort+'/validate',solicitudConfig)
   });
 });
 }
-})
-.catch(error => console.error('Error al obtener la configuración', error))
