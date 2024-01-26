@@ -27,7 +27,7 @@ const saveMsgToDb = (msg) => {
     fechaFormateada=formatearFecha(fecha);
 
     return new Promise((resolve, reject) => {
-        connection.query(`INSERT INTO chats(emisor,destino,mensaje,fecha) VALUES('${emisor}','${destination}','${message}','${NOW()}')`,
+        connection.query(`INSERT INTO chats(emisor,destino,mensaje,fecha) VALUES('${emisor}','${destination}','${message}',NOW())`,
             (error, results) => {
                 if (error) {
                     reject(error);
