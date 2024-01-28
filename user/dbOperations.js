@@ -46,7 +46,7 @@ const getMessages = (emisor,destinatario) => {
     console.log('emisor: '+emisor);
     console.log('destinatario: '+ destinatario);
     return new Promise((resolve, reject) => {
-        connection.query(`SELECT * FROM chats WHERE (emisor='${emisor}' AND destino='${destinatario}') OR (emisor='${destinatario}' AND destino='${emisor}' ORDER BY fecha ASC)`,
+        connection.query(`SELECT * FROM chats WHERE (emisor='${emisor}' AND destino='${destinatario}') OR (emisor='${destinatario}' AND destino='${emisor}') ORDER BY fecha ASC`,
             (error, results) => {
                 if (error) {
                     reject(error);
