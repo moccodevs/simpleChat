@@ -15,3 +15,6 @@ By default, access the application at localhost:3000 in the browser.
 -user1/pass1 
 -user2/pass2 
 -user3/pass3 
+
+You can quickly test it from my CleverCloud (not the main branch) deployment too . Here's the link: 
+https://simplechat.cleverapps.io/
