@@ -27,7 +27,7 @@ const loguear=(config)=>{
 
 
 
-  fetch(config.serverUrl+'/validate',solicitudConfig)
+  fetch('/validate',solicitudConfig)
     .then(response => {
     if (!response.ok) { 
         throw new Error(`Error de red: ${response.status}`);

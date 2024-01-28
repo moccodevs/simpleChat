@@ -14,9 +14,8 @@ const config = require('../config.server');
 app.get('/config', (req, res) => {
     console.log(config);
     const conf={
-        serverUrl:`${config.serverUrl}`,
-        serverPort:`${config.serverPort}`,
-        socketUrl:`${config.socketUrl}`
+        serverUrl:`${config.serverListenUrl}`,
+        serverPort:`${config.serverPort}`
     }
     res.status(200).json(conf);
   });

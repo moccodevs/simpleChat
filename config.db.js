@@ -3,12 +3,13 @@ const mysql=require('mysql');
 let connection;
 
 connection = mysql.createConnection(
-    /*{port:process.env.PORT,
+    {
+    port:process.env.PORT,
     host:process.env.DBHOST,
     user:process.env.DBUSER,
     database:process.env.DBNAME,
-    password:process.env.DBPASS}*/
-    process.env.connectionUri
+    password:process.env.DBPASS
+        }
 );
 
 connection.connect((error)=>{
