@@ -12,9 +12,9 @@ MySQL creation and loading commands are provided to run the API locally.
 
 By default, access the application at localhost:3000 in the browser.
 # Test logins with pre-created users are:
--user1/pass1 
--user2/pass2 
--user3/pass3 
+-usuario1/pass1 
+-usuario2/pass2 
+-usuario3/pass3 
 
 You can quickly test it from my CleverCloud deployment too (not the main branch). Here's the link: 
 https://simplechat.cleverapps.io/
